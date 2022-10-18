@@ -5,7 +5,6 @@ from django.utils import timezone
 
 from django.contrib import admin
 
-# Create your models here.
 class Question(models.Model):
     question_text = models.CharField(max_length=200)
     pub_date = models.DateTimeField('date published')
@@ -30,3 +29,22 @@ class Choice(models.Model):
     votes = models.IntegerField(default=0)
     def __str__(self):
         return self.choice_text
+
+
+class Genre(models.Model):
+    genre = models.CharField(max_lenght=30)
+    def __str__(self):
+        return self.genre
+
+
+class Movie(models.Model):
+    title = models.CharField(max_lenght=50)
+    author = models.ForeignKey(Author)
+    genre = models.ForeignKey(Genre)
+    def __str__(self):
+        return self.title
+
+
+class Author(models.Model):
+    name = models.CharField(max_length=50)
+    works = models.ForeignKey([Movie])
