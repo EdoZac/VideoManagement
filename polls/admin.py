@@ -1,24 +1,26 @@
 from django.contrib import admin
 
-from .models import Choice, Movie, Author, Genre
+from .models import Choice, Movie, Author, Genre, Question
 
 
-class ChoiceInline(admin.TabularInline):
-    model = Choice
+class QuestionInline(admin.TabularInline):
+    model = Question
     extra = 3
 
 
-class MovieAdmin(admin.ModelAdmin):
+class QuestionAdmin(admin.ModelAdmin):
     fieldsets = [
-        (None,               {'fields': ['title']}),
+        (None,               {'fields': ['question_text']}),
         ('Date information', {'fields': ['pub_date'], 'classes': ['collapse']}),
     ]
-    inlines = [ChoiceInline]
-    list_display = ('title', 'pub_date', 'was_published_recently')
+    inlines = [QuestionInline]
+    list_display = ('question_text', 'pub_date', 'was_published_recently')
     list_filter = ['pub_date']
-    search_fields = ['title']
+    search_fields = ['question_text']
 
 
-admin.site.register(Movie, MovieAdmin)
+admin.site.register(Question)
+admin.site.register(Movie)
 admin.site.register(Author)
 admin.site.register(Genre)
+admin.site.register(Choice)
