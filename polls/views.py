@@ -4,7 +4,7 @@ from django.urls import reverse
 from django.views import generic
 from django.utils import timezone
 
-from .models import Choice, Movie
+from .models import Question, Choice, Movie
 
 
 class IndexView(generic.ListView):
@@ -22,28 +22,27 @@ class IndexView(generic.ListView):
 
 
 class DetailView(generic.DetailView):
-    model = Movie
     template_name = 'polls/detail.html'
+    model = Movie
+
     def get_queryset(self):
-        """
-        Excludes any movies that aren't published yet.
-        """
+        
         return Movie.objects.filter(pub_date__lte=timezone.now())
 
 
 class ResultsView(generic.DetailView):
-    model = Movie
+    model = Question
     template_name = 'polls/results.html'
+
 
 def vote(request, movie_id):
     movie = get_object_or_404(Movie, pk=movie_id)
     try:
-        selected_choice = movie.choice_set.get(pk=request.POST['choice'])
+        question = movie.question_set.get(pk=request.POST['question'])
+        selected_choice = question.choice_set.get(pk=request.POST['choice'])
     except (KeyError, Choice.DoesNotExist):
-        # Redisplay the movie voting form.
         return render(request, 'polls/detail.html', {
-            'movie': movie,
-            'error_message': "You didn't select a choice.",
+            'error_message': "You didn't select a choice or question.",
         })
     else:
         selected_choice.votes += 1
@@ -51,4 +50,4 @@ def vote(request, movie_id):
         # Always return an HttpResponseRedirect after successfully dealing
         # with POST data. This prevents data from being posted twice if a
         # user hits the Back button.
-        return HttpResponseRedirect(reverse('polls:results', args=(movie.id,)))
+        return HttpResponseRedirect(reverse('polls:results', args=(question.id,)))

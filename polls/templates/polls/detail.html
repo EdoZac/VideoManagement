@@ -3,9 +3,16 @@
     <fieldset>
         <legend><h1>{{ movie.title }}</h1></legend>
         {% if error_message %}<p><strong>{{ error_message }}</strong></p>{% endif %}
-        {% for choice in movie.choice_set.all %}
-            <input type="radio" name="choice" id="choice{{ forloop.counter }}" value="{{ choice.id }}">
-            <label for="choice{{ forloop.counter }}">{{ choice.choice_text }}</label><br>
+        {% for question in movie.question_set.all %}
+            <legend><h1>{{ question.question_text }}</h1></legend>
+            <input type="radio" name="question" id="question{{ forloop.counter }}" value="{{ question.id }}">
+            <br />
+            {% if error_message %}<p><strong>{{ error_message }}</strong></p>{% endif %}
+            {% for choice in question.choice_set.all %}
+                <label for="choice{{ forloop.counter }}">{{ choice.choice_text }}</label><br>
+                <input type="radio" name="choice" id="choice{{ forloop.counter }}" value="{{ choice.id }}">
+                <br />
+            {% endfor %}
         {% endfor %}
     </fieldset>
     <input type="submit" value="Vote">
